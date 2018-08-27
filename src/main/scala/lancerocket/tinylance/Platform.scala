@@ -12,7 +12,6 @@ import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.util.ResetCatchAndSync
 import freechips.rocketchip.system._
 
-import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.jtag._
 import sifive.blocks.devices.uart._
@@ -39,7 +38,6 @@ class TinyLancePlatformIO(implicit val p: Parameters) extends Bundle {
     val jtag = new JTAGPins(() => PinGen(), false)
     val gpio = new GPIOPins(() => PinGen(), p(PeripheryGPIOKey)(0))
     val seg7 = new Seg7LEDPins(() => PinGen())
-    val aon  = new MockAONWrapperPins()
   }
   val jtag_reset = Bool(INPUT)
   val ndreset    = Bool(OUTPUT)
@@ -53,10 +51,8 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   val sys = Module(LazyModule(new TinyLanceSystem).module)
   val io = new TinyLancePlatformIO
 
-  // This needs to be de-asserted synchronously to the coreClk.
-  val async_corerst = sys.aon.rsts.corerst
-  // Add in debug-controlled reset.
-  sys.reset := ResetCatchAndSync(clock, async_corerst, 20)
+  // Add in debug-controlled reset. No Debug Reset
+  sys.reset := ResetCatchAndSync(clock, false.B, 20)
 
   //-----------------------------------------------------------------------
   // Check for unsupported rocket-chip connections
@@ -118,9 +114,4 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   sjtag.mfr_id := p(JtagDTMKey).idcodeManufId.U(11.W)
 
   io.ndreset := sys.debug.ndreset
-
-  // AON Pads -- direct connection is OK because
-  // EnhancedPin is hard-coded in MockAONPads
-  // and thus there is no .fromPort method.
-  io.pins.aon <> sys.aon.pins
 }

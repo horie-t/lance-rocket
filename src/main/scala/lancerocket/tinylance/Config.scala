@@ -10,7 +10,6 @@ import freechips.rocketchip.diplomacy.{DTSModel, DTSTimebase}
 import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
 
-import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
@@ -33,8 +32,6 @@ class TinyLancePeripherals extends Config((site, here, up) => {
     UARTParams(address = 0x10023000))
   case PeripherySeg7LEDKey => List(
     Seg7LEDParams(address = 0x10017000))
-  case PeripheryMockAONKey =>
-    MockAONParams(address = 0x10000000)
   case PeripheryMaskROMKey => List(
     MaskROMParams(address = 0x10000, name = "BootROM"))
 })

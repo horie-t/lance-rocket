@@ -79,12 +79,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     IOBUF(btn_1, dut.io.pins.gpio.pins(30))
     IOBUF(btn_2, dut.io.pins.gpio.pins(31))
 
-    val iobuf_btn_3 = Module(new IOBUF())
-    iobuf_btn_3.io.I := ~dut.io.pins.aon.pmu.dwakeup_n.o.oval
-    iobuf_btn_3.io.T := ~dut.io.pins.aon.pmu.dwakeup_n.o.oe
-    attach(btn_3, iobuf_btn_3.io.IO)
-    dut.io.pins.aon.pmu.dwakeup_n.i.ival := ~iobuf_btn_3.io.O & dut.io.pins.aon.pmu.dwakeup_n.o.ie
-
     // UART1 RX/TX pins are assigned to PMOD_D connector pins 0/1
     IOBUF(ja_0, dut.io.pins.gpio.pins(25)) // UART1 TX
     IOBUF(ja_1, dut.io.pins.gpio.pins(24)) // UART1 RX
@@ -92,7 +86,7 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     // Use the LEDs for some more useful debugging things
     IOBUF(led_0, ck_rst)
     IOBUF(led_1, SRST_n)
-    IOBUF(led_2, dut.io.pins.aon.pmu.dwakeup_n.i.ival)
+//    IOBUF(led_2, dut.io.pins.aon.pmu.dwakeup_n.i.ival)
     IOBUF(led_3, dut.io.pins.gpio.pins(14))
 
     IOBUF(led_4, dut.io.pins.gpio.pins(4))
@@ -127,13 +121,5 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     IOBUF(seg7_an_5, dut.io.pins.seg7.anodes(5))
     IOBUF(seg7_an_6, dut.io.pins.seg7.anodes(6))
     IOBUF(seg7_an_7, dut.io.pins.seg7.anodes(7))
-
-    //---------------------------------------------------------------------
-    // Unconnected inputs
-    //---------------------------------------------------------------------
-
-    dut.io.pins.aon.erst_n.i.ival       := ~reset_periph
-    dut.io.pins.aon.lfextclk.i.ival     := slow_clock
-    dut.io.pins.aon.pmu.vddpaden.i.ival := 1.U
   }
 }

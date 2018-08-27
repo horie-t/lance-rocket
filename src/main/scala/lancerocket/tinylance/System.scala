@@ -11,7 +11,6 @@ import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.system._
 
-import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
@@ -23,7 +22,6 @@ import sifive.blocks.devices.seg7._
 class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryMaskROMSlave
     with HasPeripheryDebug
-    with HasPeripheryMockAON
     with HasPeripheryUART
     with HasPeripheryGPIO
     with HasPeripherySeg7LED {
@@ -35,7 +33,6 @@ class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
     with HasPeripheryDebugModuleImp
     with HasPeripheryUARTModuleImp
     with HasPeripheryGPIOModuleImp
-    with HasPeripheryMockAONModuleImp
     with HasPeripherySeg7LEDModuleImp {
   // Reset vector is set to the location of the mask rom
   val maskROMParams = p(PeripheryMaskROMKey)
