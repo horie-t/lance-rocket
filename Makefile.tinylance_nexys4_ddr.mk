@@ -12,15 +12,12 @@ export BOARD := nexys4_ddr
 #export BOOTROM_DIR := $(base_dir)/bootrom/xip
 
 rocketchip_dir := $(base_dir)/rocket-chip
-#sifiveblocks_dir := $(base_dir)/sifive-blocks
-#VSRCS := \
-#	$(rocketchip_dir)/src/main/resources/vsrc/AsyncResetReg.v \
-#	$(rocketchip_dir)/src/main/resources/vsrc/plusarg_reader.v \
-#	$(sifiveblocks_dir)/vsrc/SRLatch.v \
-#	$(FPGA_DIR)/common/vsrc/PowerOnResetFPGAOnly.v \
-#	$(BUILD_DIR)/$(CONFIG_PROJECT).$(CONFIG).rom.v \
-#	$(BUILD_DIR)/$(CONFIG_PROJECT).$(CONFIG).v
 VSRCS := \
+	$(rocketchip_dir)/src/main/resources/vsrc/AsyncResetReg.v \
+	$(rocketchip_dir)/src/main/resources/vsrc/plusarg_reader.v \
+	$(base_dir)/src/main/verilog/SRLatch.v \
+	$(base_dir)/src/main/verilog/xilinx/PowerOnResetFPGAOnly.v \
+	$(BUILD_DIR)/$(CONFIG_PROJECT).$(CONFIG).rom.v \
 	$(BUILD_DIR)/$(CONFIG_PROJECT).$(CONFIG).v
 
 include common.mk
