@@ -4,9 +4,9 @@
 base_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BUILD_DIR := $(base_dir)/builds/tinylance
 FPGA_DIR := $(base_dir)/src/main/fpga-shells/xilinx
-MODEL := TinyLance
-PROJECT := io.github.horie_t.lancerocket.tinylance
-export CONFIG_PROJECT := io.github.horie_t.lancerocket.tinylance
+MODEL := TinyLanceChip
+PROJECT := lancerocket.tinylance
+export CONFIG_PROJECT := lancerocket.tinylance
 export CONFIG := TinyLanceConfig
 export BOARD := nexys4_ddr
 export BOOTROM_DIR := $(base_dir)/src/main/c_cpp/bootrom/xip
