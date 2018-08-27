@@ -101,25 +101,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val uart_cts     = IO(Analog(1.W))
   val uart_rts     = IO(Analog(1.W))
 
-  // VGA Diplay
-  val vga_red_0    = IO(Analog(1.W))
-  val vga_red_1    = IO(Analog(1.W))
-  val vga_red_2    = IO(Analog(1.W))
-  val vga_red_3    = IO(Analog(1.W))
-
-  val vga_green_0  = IO(Analog(1.W))
-  val vga_green_1  = IO(Analog(1.W))
-  val vga_green_2  = IO(Analog(1.W))
-  val vga_green_3  = IO(Analog(1.W))
-
-  val vga_blue_0   = IO(Analog(1.W))
-  val vga_blue_1   = IO(Analog(1.W))
-  val vga_blue_2   = IO(Analog(1.W))
-  val vga_blue_3   = IO(Analog(1.W))
-
-  val vga_hSync    = IO(Analog(1.W))
-  val vga_vSync    = IO(Analog(1.W))
-
   // JA (Used for more generic GPIOs)
   val ja_0         = IO(Analog(1.W))
   val ja_1         = IO(Analog(1.W))

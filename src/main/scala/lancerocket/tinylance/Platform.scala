@@ -20,7 +20,6 @@ import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.i2c._
 import sifive.blocks.devices.seg7._
-import sifive.blocks.devices.vga._
 import sifive.blocks.devices.pinctrl._
 
 //-------------------------------------------------------------------------
@@ -44,7 +43,6 @@ class TinyLancePlatformIO(implicit val p: Parameters) extends Bundle {
     val gpio = new GPIOPins(() => PinGen(), p(PeripheryGPIOKey)(0))
     val qspi = new SPIPins(() => PinGen(), p(PeripherySPIFlashKey)(0))
     val seg7 = new Seg7LEDPins(() => PinGen())
-    val vga  = new VGAPins(() => PinGen())
     val aon  = new MockAONWrapperPins()
   }
   val jtag_reset = Bool(INPUT)
@@ -169,9 +167,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
 
   // Dedicated Seg 7 LED Pads
   Seg7LEDPinsFromPort(io.pins.seg7, sys.seg7Led(0), clock = sys.clock, reset = sys.reset, syncStages = 0)
-
-  // Dedicated VGA Pads
-  VGAPinsFromPort(io.pins.vga, sys.vga(0), clock = sys.clock, reset = sys.reset, syncStages = 0)
 
   // JTAG Debug Interface
   val sjtag = sys.debug.systemjtag.get

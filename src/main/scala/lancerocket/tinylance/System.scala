@@ -18,7 +18,6 @@ import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.i2c._
 import sifive.blocks.devices.seg7._
-import sifive.blocks.devices.vga._
 
 //-------------------------------------------------------------------------
 // TinyLance
@@ -34,8 +33,7 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryGPIO
     with HasPeripheryPWM
     with HasPeripheryI2C
-    with HasPeripherySeg7LED
-    with HasPeripheryVGA {
+    with HasPeripherySeg7LED {
   override lazy val module = new TinyLanceSystemModuleImp(this)
 }
 
@@ -49,8 +47,7 @@ class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
     with HasPeripheryMockAONModuleImp
     with HasPeripheryPWMModuleImp
     with HasPeripheryI2CModuleImp
-    with HasPeripherySeg7LEDModuleImp
-    with HasPeripheryVGAModuleImp {
+    with HasPeripherySeg7LEDModuleImp {
   // Reset vector is set to the location of the mask rom
   val maskROMParams = p(PeripheryMaskROMKey)
   global_reset_vector := maskROMParams(0).address.U
