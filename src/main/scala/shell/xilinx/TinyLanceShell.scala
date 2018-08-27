@@ -1,6 +1,6 @@
 // See LICENSE for license details.
 // See LICENSE.HORIE_Tetsuya for license details.
-package sifive.fpgashells.shell.xilinx.nexys4ddrshell
+package lancerocket.tinylance
 
 import Chisel._
 import chisel3.core.{Input, Output, attach}
@@ -18,10 +18,10 @@ import sifive.blocks.devices.pinctrl.{BasePin}
 import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, mmcm4, reset_sys, PowerOnResetFPGAOnly}
 
 //-------------------------------------------------------------------------
-// Nexys4DDRShell
+// TinyLanceShell
 //-------------------------------------------------------------------------
 
-abstract class Nexys4DDRShell(implicit val p: Parameters) extends RawModule {
+abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
 
   //-----------------------------------------------------------------------
   // Interface

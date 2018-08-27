@@ -12,14 +12,13 @@ import freechips.rocketchip.diplomacy.{LazyModule}
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.spi._
 
-import sifive.fpgashells.shell.xilinx.nexys4ddrshell.{Nexys4DDRShell}
 import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, PowerOnResetFPGAOnly, STARTUPE2}
 
 //-------------------------------------------------------------------------
 // TinyLanceChip
 //-------------------------------------------------------------------------
 
-class TinyLanceChip(implicit override val p: Parameters) extends Nexys4DDRShell {
+class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell {
 
   //-----------------------------------------------------------------------
   // Clock divider
