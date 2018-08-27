@@ -9,7 +9,7 @@ PROJECT := io.github.horie_t.lancerocket.tinylance
 export CONFIG_PROJECT := io.github.horie_t.lancerocket.tinylance
 export CONFIG := TinyLanceConfig
 export BOARD := nexys4_ddr
-#export BOOTROM_DIR := $(base_dir)/bootrom/xip
+export BOOTROM_DIR := $(base_dir)/src/main/c_cpp/bootrom/xip
 
 rocketchip_dir := $(base_dir)/rocket-chip
 VSRCS := \
