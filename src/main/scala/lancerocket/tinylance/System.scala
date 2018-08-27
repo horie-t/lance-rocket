@@ -14,7 +14,6 @@ import freechips.rocketchip.system._
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.pwm._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.i2c._
 import sifive.blocks.devices.seg7._
@@ -28,8 +27,6 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryDebug
     with HasPeripheryMockAON
     with HasPeripheryUART
-    with HasPeripherySPIFlash
-    with HasPeripherySPI
     with HasPeripheryGPIO
     with HasPeripheryPWM
     with HasPeripheryI2C
@@ -41,9 +38,7 @@ class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
   extends RocketSubsystemModuleImp(_outer)
     with HasPeripheryDebugModuleImp
     with HasPeripheryUARTModuleImp
-    with HasPeripherySPIModuleImp
     with HasPeripheryGPIOModuleImp
-    with HasPeripherySPIFlashModuleImp
     with HasPeripheryMockAONModuleImp
     with HasPeripheryPWMModuleImp
     with HasPeripheryI2CModuleImp

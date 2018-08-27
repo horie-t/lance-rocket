@@ -11,7 +11,6 @@ import freechips.rocketchip.devices.debug._
 
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.pwm._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.pinctrl.{BasePin}
 
@@ -89,11 +88,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val btn_1        = IO(Analog(1.W))
   val btn_2        = IO(Analog(1.W))
   val btn_3        = IO(Analog(1.W))
-
-  // Dedicated QSPI interface
-  val qspi_cs      = IO(Analog(1.W))
-  val qspi_sck     = IO(Analog(1.W))
-  val qspi_dq      = IO(Vec(4, Analog(1.W)))
 
   // UART0
   val uart_rxd_out = IO(Analog(1.W))
@@ -179,32 +173,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   reset_periph                     := ip_reset_sys.io.peripheral_reset
   reset_intcon_n                   := ip_reset_sys.io.interconnect_aresetn
   reset_periph_n                   := ip_reset_sys.io.peripheral_aresetn
-
-  //-----------------------------------------------------------------------
-  // SPI Flash
-  //-----------------------------------------------------------------------
-
-  def connectSPIFlash(dut: HasPeripherySPIFlashModuleImp): Unit = {
-    val qspiParams = p(PeripherySPIFlashKey)
-    if (!qspiParams.isEmpty) {
-      val qspi_params = qspiParams(0)
-      val qspi_pins = Wire(new SPIPins(() => {new BasePin()}, qspi_params))
-
-      SPIPinsFromPort(qspi_pins,
-        dut.qspi(0),
-        dut.clock,
-        dut.reset,
-        syncStages = qspi_params.sampleDelay
-      )
-
-      IOBUF(qspi_sck, dut.qspi(0).sck)
-      IOBUF(qspi_cs,  dut.qspi(0).cs(0))
-
-      (qspi_dq zip qspi_pins.dq).foreach {
-        case(a, b) => IOBUF(a,b)
-      }
-    }
-  }
 
   //---------------------------------------------------------------------
   // Debug JTAG

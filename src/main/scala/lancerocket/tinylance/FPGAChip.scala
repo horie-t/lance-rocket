@@ -10,7 +10,6 @@ import freechips.rocketchip.config._
 import freechips.rocketchip.diplomacy.{LazyModule}
 
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
 
 import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, PowerOnResetFPGAOnly, STARTUPE2}
 
@@ -39,18 +38,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
 
   withClockAndReset(clock_32MHz, ~ck_rst) {
     val dut = Module(new TinyLancePlatform)
-
-    //---------------------------------------------------------------------
-    // SPI flash IOBUFs
-    //---------------------------------------------------------------------
-
-    STARTUPE2(dut.io.pins.qspi.sck.o.oval)
-    IOBUF(qspi_cs,  dut.io.pins.qspi.cs(0))
-
-    IOBUF(qspi_dq(0), dut.io.pins.qspi.dq(0))
-    IOBUF(qspi_dq(1), dut.io.pins.qspi.dq(1))
-    IOBUF(qspi_dq(2), dut.io.pins.qspi.dq(2))
-    IOBUF(qspi_dq(3), dut.io.pins.qspi.dq(3))
 
     //---------------------------------------------------------------------
     // JTAG IOBUFs
