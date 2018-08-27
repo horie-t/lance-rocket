@@ -71,18 +71,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     iobuf_uart_cts.io.I := false.B
     iobuf_uart_cts.io.T := false.B
 
-    // Mirror outputs of GPIOs with PWM peripherals to RGB LEDs on Arty
-    // assign RGB LED0 R,G,B inputs = PWM0(1,2,3) when iof_1 is active
-    IOBUF(led0_r, dut.io.pins.gpio.pins(1))
-    IOBUF(led0_g, dut.io.pins.gpio.pins(2))
-    IOBUF(led0_b, dut.io.pins.gpio.pins(3))
-
-    // Note that this is the one which is actually connected on the HiFive/Crazy88
-    // Board. Same with RGB LED1 R,G,B inputs = PWM1(1,2,3) when iof_1 is active
-    IOBUF(led1_r, dut.io.pins.gpio.pins(19))
-    IOBUF(led1_g, dut.io.pins.gpio.pins(21))
-    IOBUF(led1_b, dut.io.pins.gpio.pins(22))
-
     // Only 19 out of 20 shield pins connected to GPIO pins
     // Shield pin A5 (pin 14) left unconnected
     // The buttons are connected to some extra GPIO pins not connected on the
