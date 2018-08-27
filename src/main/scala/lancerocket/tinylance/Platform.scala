@@ -17,7 +17,6 @@ import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.jtag._
 import sifive.blocks.devices.pwm._
 import sifive.blocks.devices.uart._
-import sifive.blocks.devices.i2c._
 import sifive.blocks.devices.seg7._
 import sifive.blocks.devices.pinctrl._
 
@@ -75,15 +74,12 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
 
   val sys_uart = sys.uart
   val sys_pwm  = sys.pwm
-  val sys_i2c  = sys.i2c
 
   val uart_pins = sys.outer.uartParams.map { c => Wire(new UARTPins(() => PinGen()))}
   val pwm_pins  = sys.outer.pwmParams.map  { c => Wire(new PWMPins(() => PinGen(), c))}
-  val i2c_pins  = sys.outer.i2cParams.map  { c => Wire(new I2CPins(() => PinGen()))}
 
   (uart_pins zip  sys_uart) map {case (p, r) => UARTPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
   (pwm_pins  zip  sys_pwm)  map {case (p, r) => PWMPinsFromPort(p, r) }
-  (i2c_pins  zip  sys_i2c)  map {case (p, r) => I2CPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
 
   //-----------------------------------------------------------------------
   // Default Pin connections before attaching pinmux
@@ -100,12 +96,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   
   val iof_0 = sys.gpio(0).iof_0.get
   val iof_1 = sys.gpio(0).iof_1.get
-
-  // I2C
-  if (sys.outer.i2cParams.length == 1) {
-    BasePinToIOF(i2c_pins(0).sda, iof_0(12))
-    BasePinToIOF(i2c_pins(0).scl, iof_0(13))
-  }
 
   // UART0
   BasePinToIOF(uart_pins(0).rxd, iof_0(16))

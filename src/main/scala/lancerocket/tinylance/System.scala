@@ -29,7 +29,6 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryUART
     with HasPeripheryGPIO
     with HasPeripheryPWM
-    with HasPeripheryI2C
     with HasPeripherySeg7LED {
   override lazy val module = new TinyLanceSystemModuleImp(this)
 }
@@ -41,7 +40,6 @@ class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
     with HasPeripheryGPIOModuleImp
     with HasPeripheryMockAONModuleImp
     with HasPeripheryPWMModuleImp
-    with HasPeripheryI2CModuleImp
     with HasPeripherySeg7LEDModuleImp {
   // Reset vector is set to the location of the mask rom
   val maskROMParams = p(PeripheryMaskROMKey)
