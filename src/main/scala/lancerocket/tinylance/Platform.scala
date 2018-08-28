@@ -102,12 +102,4 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
 
   // Dedicated Seg 7 LED Pads
   Seg7LEDPinsFromPort(io.pins.seg7, sys.seg7Led(0), clock = sys.clock, reset = sys.reset, syncStages = 0)
-
-  // JTAG Debug Interface
-  val sjtag = sys.debug.systemjtag.get
-  JTAGPinsFromPort(io.pins.jtag, sjtag.jtag)
-  sjtag.reset := io.jtag_reset
-  sjtag.mfr_id := p(JtagDTMKey).idcodeManufId.U(11.W)
-
-  io.ndreset := sys.debug.ndreset
 }

@@ -6,7 +6,6 @@ import Chisel._
 
 import freechips.rocketchip.config._
 import freechips.rocketchip.subsystem._
-import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.system._
@@ -21,7 +20,6 @@ import sifive.blocks.devices.seg7._
 
 class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryMaskROMSlave
-    with HasPeripheryDebug
     with HasPeripheryUART
     with HasPeripheryGPIO
     with HasPeripherySeg7LED {
@@ -30,7 +28,6 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
 
 class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
   extends RocketSubsystemModuleImp(_outer)
-    with HasPeripheryDebugModuleImp
     with HasPeripheryUARTModuleImp
     with HasPeripheryGPIOModuleImp
     with HasPeripherySeg7LEDModuleImp {

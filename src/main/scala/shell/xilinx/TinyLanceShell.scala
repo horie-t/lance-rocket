@@ -86,14 +86,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val uart_cts     = IO(Analog(1.W))
   val uart_rts     = IO(Analog(1.W))
 
-  // JD (used for JTAG connection)
-  val jd_0         = IO(Analog(1.W))  // TDO
-  val jd_1         = IO(Analog(1.W))  // TRST_n
-  val jd_2         = IO(Analog(1.W))  // TCK
-  val jd_4         = IO(Analog(1.W))  // TDI
-  val jd_5         = IO(Analog(1.W))  // TMS
-  val jd_6         = IO(Analog(1.W))  // SRST_n
-
   //-----------------------------------------------------------------------
   // Wire declrations
   //-----------------------------------------------------------------------
@@ -111,15 +103,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val reset_periph   = Wire(Bool())
   val reset_intcon_n = Wire(Bool())
   val reset_periph_n = Wire(Bool())
-
-  val SRST_n         = Wire(Bool())
-
-  val dut_jtag_TCK   = Wire(Clock())
-  val dut_jtag_TMS   = Wire(Bool())
-  val dut_jtag_TDI   = Wire(Bool())
-  val dut_jtag_TDO   = Wire(Bool())
-  val dut_jtag_reset = Wire(Bool())
-  val dut_ndreset    = Wire(Bool())
 
   //-----------------------------------------------------------------------
   // Clock Generator
@@ -144,9 +127,9 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val ip_reset_sys = Module(new reset_sys())
 
   ip_reset_sys.io.slowest_sync_clk := clock_8MHz
-  ip_reset_sys.io.ext_reset_in     := ck_rst & SRST_n
+  ip_reset_sys.io.ext_reset_in     := ck_rst
   ip_reset_sys.io.aux_reset_in     := true.B
-  ip_reset_sys.io.mb_debug_sys_rst := dut_ndreset
+  ip_reset_sys.io.mb_debug_sys_rst := true.B
   ip_reset_sys.io.dcm_locked       := mmcm_locked
 
   reset_core                       := ip_reset_sys.io.mb_reset
@@ -154,56 +137,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   reset_periph                     := ip_reset_sys.io.peripheral_reset
   reset_intcon_n                   := ip_reset_sys.io.interconnect_aresetn
   reset_periph_n                   := ip_reset_sys.io.peripheral_aresetn
-
-  //---------------------------------------------------------------------
-  // Debug JTAG
-  //---------------------------------------------------------------------
-
-  def connectDebugJTAG(dut: HasPeripheryDebugModuleImp): SystemJTAGIO = {
-
-    //-------------------------------------------------------------------
-    // JTAG Reset
-    //-------------------------------------------------------------------
-
-    val jtag_power_on_reset = PowerOnResetFPGAOnly(clock_32MHz)
-
-    dut_jtag_reset := jtag_power_on_reset
-
-    //-------------------------------------------------------------------
-    // JTAG IOBUFs
-    //-------------------------------------------------------------------
-
-    dut_jtag_TCK  := IBUFG(IOBUF(jd_2).asClock)
-
-    dut_jtag_TMS  := IOBUF(jd_5)
-    PULLUP(jd_5)
-
-    dut_jtag_TDI  := IOBUF(jd_4)
-    PULLUP(jd_4)
-
-    IOBUF(jd_0, dut_jtag_TDO)
-
-    SRST_n := IOBUF(jd_6)
-    PULLUP(jd_6)
-
-    //-------------------------------------------------------------------
-    // JTAG PINS
-    //-------------------------------------------------------------------
-
-    val djtag     = dut.debug.systemjtag.get
-
-    djtag.jtag.TCK := dut_jtag_TCK
-    djtag.jtag.TMS := dut_jtag_TMS
-    djtag.jtag.TDI := dut_jtag_TDI
-    dut_jtag_TDO   := djtag.jtag.TDO.data
-
-    djtag.mfr_id   := p(JtagDTMKey).idcodeManufId.U(11.W)
-
-    djtag.reset    := dut_jtag_reset
-    dut_ndreset    := dut.debug.ndreset
-
-    djtag
-  }
 
   //---------------------------------------------------------------------
   // UART
