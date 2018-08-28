@@ -79,10 +79,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     IOBUF(btn_1, dut.io.pins.gpio.pins(30))
     IOBUF(btn_2, dut.io.pins.gpio.pins(31))
 
-    // UART1 RX/TX pins are assigned to PMOD_D connector pins 0/1
-    IOBUF(ja_0, dut.io.pins.gpio.pins(25)) // UART1 TX
-    IOBUF(ja_1, dut.io.pins.gpio.pins(24)) // UART1 RX
-
     // Use the LEDs for some more useful debugging things
     IOBUF(led_0, ck_rst)
     IOBUF(led_1, SRST_n)

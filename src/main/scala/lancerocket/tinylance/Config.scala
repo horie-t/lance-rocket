@@ -28,8 +28,7 @@ class TinyLancePeripherals extends Config((site, here, up) => {
   case PeripheryGPIOKey => List(
     GPIOParams(address = 0x10012000, width = 32, includeIOF = true))
   case PeripheryUARTKey => List(
-    UARTParams(address = 0x10013000),
-    UARTParams(address = 0x10023000))
+    UARTParams(address = 0x10013000))
   case PeripherySeg7LEDKey => List(
     Seg7LEDParams(address = 0x10017000))
   case PeripheryMaskROMKey => List(

@@ -93,10 +93,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   BasePinToIOF(uart_pins(0).rxd, iof_0(16))
   BasePinToIOF(uart_pins(0).txd, iof_0(17))
 
-  // UART1
-  BasePinToIOF(uart_pins(1).rxd, iof_0(24))
-  BasePinToIOF(uart_pins(1).txd, iof_0(25))
-
   //-----------------------------------------------------------------------
   // Drive actual Pads
   //-----------------------------------------------------------------------
