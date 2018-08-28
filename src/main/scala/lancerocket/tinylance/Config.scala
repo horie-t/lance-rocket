@@ -4,22 +4,18 @@ package lancerocket.tinylance
 
 import freechips.rocketchip.config._
 import freechips.rocketchip.subsystem._
-import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy.{DTSModel, DTSTimebase}
 import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
 
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
 
 // Default TinyLanceConfig
 class DefaultTinyLanceConfig extends Config (
-  new WithNBreakpoints(2)        ++
+  new WithNBreakpoints(0)        ++
   new WithNExtTopInterrupts(0)   ++
-  new WithJtagDTM                ++
   new TinyConfig
 )
 
@@ -38,12 +34,5 @@ class TinyLancePeripherals extends Config((site, here, up) => {
 // TinyLance Peripherals
 class TinyLanceConfig extends Config(
   new TinyLancePeripherals    ++
-  new DefaultTinyLanceConfig().alter((site,here,up) => {
-    case DTSTimebase => BigInt(32768)
-    case JtagDTMKey => new JtagDTMConfig (
-      idcodeVersion = 2,
-      idcodePartNum = 0x000,
-      idcodeManufId = 0x489,
-      debugIdleCycles = 5)
-  })
+  new DefaultTinyLanceConfig()
 )

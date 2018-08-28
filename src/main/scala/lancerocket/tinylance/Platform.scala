@@ -13,7 +13,6 @@ import freechips.rocketchip.util.ResetCatchAndSync
 import freechips.rocketchip.system._
 
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.jtag._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
 import sifive.blocks.devices.pinctrl._
@@ -35,12 +34,9 @@ object PinGen {
 
 class TinyLancePlatformIO(implicit val p: Parameters) extends Bundle {
   val pins = new Bundle {
-    val jtag = new JTAGPins(() => PinGen(), false)
     val gpio = new GPIOPins(() => PinGen(), p(PeripheryGPIOKey)(0))
     val seg7 = new Seg7LEDPins(() => PinGen())
   }
-  val jtag_reset = Bool(INPUT)
-  val ndreset    = Bool(OUTPUT)
 }
 
 //-------------------------------------------------------------------------

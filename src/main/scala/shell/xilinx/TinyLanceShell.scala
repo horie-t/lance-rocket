@@ -7,10 +7,8 @@ import chisel3.core.{Input, Output, attach}
 import chisel3.experimental.{RawModule, Analog, withClockAndReset}
 
 import freechips.rocketchip.config._
-import freechips.rocketchip.devices.debug._
 
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.pwm._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.pinctrl.{BasePin}
 
