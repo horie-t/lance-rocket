@@ -15,7 +15,6 @@ import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.pwm._
 import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
-import sifive.blocks.devices.i2c._
 import sifive.blocks.devices.seg7._
 
 // Default TinyLanceConfig
@@ -45,8 +44,6 @@ class TinyLancePeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(
     UARTParams(address = 0x10013000),
     UARTParams(address = 0x10023000))
-  case PeripheryI2CKey => List(
-    I2CParams(address = 0x10016000))
   case PeripherySeg7LEDKey => List(
     Seg7LEDParams(address = 0x10017000))
   case PeripheryMockAONKey =>
