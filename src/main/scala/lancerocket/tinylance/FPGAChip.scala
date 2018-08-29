@@ -98,10 +98,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     attach(btn_3, iobuf_btn_3.io.IO)
     dut.io.pins.aon.pmu.dwakeup_n.i.ival := ~iobuf_btn_3.io.O & dut.io.pins.aon.pmu.dwakeup_n.o.ie
 
-    // UART1 RX/TX pins are assigned to PMOD_D connector pins 0/1
-    IOBUF(ja_0, dut.io.pins.gpio.pins(25)) // UART1 TX
-    IOBUF(ja_1, dut.io.pins.gpio.pins(24)) // UART1 RX
-
     // Use the LEDs for some more useful debugging things
     IOBUF(led_0, ck_rst)
     IOBUF(led_1, SRST_n)

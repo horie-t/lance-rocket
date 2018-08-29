@@ -92,16 +92,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val uart_cts     = IO(Analog(1.W))
   val uart_rts     = IO(Analog(1.W))
 
-  // JA (Used for more generic GPIOs)
-  val ja_0         = IO(Analog(1.W))
-  val ja_1         = IO(Analog(1.W))
-  val ja_2         = IO(Analog(1.W))
-  val ja_3         = IO(Analog(1.W))
-  val ja_4         = IO(Analog(1.W))
-  val ja_5         = IO(Analog(1.W))
-  val ja_6         = IO(Analog(1.W))
-  val ja_7         = IO(Analog(1.W))
-
   // JD (used for JTAG connection)
   val jd_0         = IO(Analog(1.W))  // TDO
   val jd_1         = IO(Analog(1.W))  // TRST_n
