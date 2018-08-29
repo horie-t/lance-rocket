@@ -45,11 +45,9 @@ _init_uart:
 	// put('A')
 	li t1, 0x41
 	sb t1, UART_REG_TXFIFO(t0)
-	
-  csrr a0, mhartid
-  la a1, dtb
-  li t0, XIP_TARGET_ADDR
-  jr t0
+
+1:
+	j 1b 	// 無限ループ
 
   .section .rodata
 dtb:

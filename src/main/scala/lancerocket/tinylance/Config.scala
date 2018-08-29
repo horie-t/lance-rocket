@@ -12,7 +12,6 @@ import freechips.rocketchip.tile._
 
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
 
@@ -28,14 +27,6 @@ class DefaultTinyLanceConfig extends Config (
 class TinyLancePeripherals extends Config((site, here, up) => {
   case PeripheryGPIOKey => List(
     GPIOParams(address = 0x10012000, width = 32, includeIOF = true))
-  case PeripherySPIKey => List(
-    SPIParams(csWidth = 4, rAddress = 0x10024000, sampleDelay = 3),
-    SPIParams(csWidth = 1, rAddress = 0x10034000, sampleDelay = 3))
-  case PeripherySPIFlashKey => List(
-    SPIFlashParams(
-      fAddress = 0x20000000,
-      rAddress = 0x10014000,
-      sampleDelay = 3))
   case PeripheryUARTKey => List(
     UARTParams(address = 0x10013000))
   case PeripherySeg7LEDKey => List(

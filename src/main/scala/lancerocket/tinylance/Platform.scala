@@ -14,7 +14,6 @@ import freechips.rocketchip.system._
 
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
 import sifive.blocks.devices.pinctrl._
@@ -37,7 +36,6 @@ object PinGen {
 class TinyLancePlatformIO(implicit val p: Parameters) extends Bundle {
   val pins = new Bundle {
     val gpio = new GPIOPins(() => PinGen(), p(PeripheryGPIOKey)(0))
-    val qspi = new SPIPins(() => PinGen(), p(PeripherySPIFlashKey)(0))
     val seg7 = new Seg7LEDPins(() => PinGen())
     val aon  = new MockAONWrapperPins()
   }
@@ -70,13 +68,10 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   // converters.
 
   val sys_uart = sys.uart
-  val sys_spi  = sys.spi
 
   val uart_pins = sys.outer.uartParams.map { c => Wire(new UARTPins(() => PinGen()))}
-  val spi_pins  = sys.outer.spiParams.map  { c => Wire(new SPIPins(() => PinGen(), c))}
 
   (uart_pins zip  sys_uart) map {case (p, r) => UARTPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
-  (spi_pins  zip  sys_spi)  map {case (p, r) => SPIPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
 
   //-----------------------------------------------------------------------
   // Default Pin connections before attaching pinmux
@@ -94,25 +89,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   val iof_0 = sys.gpio(0).iof_0.get
   val iof_1 = sys.gpio(0).iof_1.get
 
-  // SPI1 (0 is the dedicated)
-  BasePinToIOF(spi_pins(0).cs(0), iof_0(2))
-  BasePinToIOF(spi_pins(0).dq(0), iof_0(3))
-  BasePinToIOF(spi_pins(0).dq(1), iof_0(4))
-  BasePinToIOF(spi_pins(0).sck,   iof_0(5))
-  BasePinToIOF(spi_pins(0).dq(2), iof_0(6))
-  BasePinToIOF(spi_pins(0).dq(3), iof_0(7))
-  BasePinToIOF(spi_pins(0).cs(1), iof_0(8))
-  BasePinToIOF(spi_pins(0).cs(2), iof_0(9))
-  BasePinToIOF(spi_pins(0).cs(3), iof_0(10))
-
-  // SPI2
-  BasePinToIOF(spi_pins(1).cs(0), iof_0(26))
-  BasePinToIOF(spi_pins(1).dq(0), iof_0(27))
-  BasePinToIOF(spi_pins(1).dq(1), iof_0(28))
-  BasePinToIOF(spi_pins(1).sck,   iof_0(29))
-  BasePinToIOF(spi_pins(1).dq(2), iof_0(30))
-  BasePinToIOF(spi_pins(1).dq(3), iof_0(31))
-
   // UART0
   BasePinToIOF(uart_pins(0).rxd, iof_0(16))
   BasePinToIOF(uart_pins(0).txd, iof_0(17))
@@ -123,9 +99,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
 
   // Result of Pin Mux
   GPIOPinsFromPort(io.pins.gpio, sys.gpio(0))
-
-  // Dedicated SPI Pads
-  SPIPinsFromPort(io.pins.qspi, sys.qspi(0), clock = sys.clock, reset = sys.reset, syncStages = 3)
 
   // Dedicated Seg 7 LED Pads
   Seg7LEDPinsFromPort(io.pins.seg7, sys.seg7Led(0), clock = sys.clock, reset = sys.reset, syncStages = 0)

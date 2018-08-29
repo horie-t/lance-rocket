@@ -13,7 +13,6 @@ import freechips.rocketchip.system._
 
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
 
@@ -25,8 +24,6 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryMaskROMSlave
     with HasPeripheryMockAON
     with HasPeripheryUART
-    with HasPeripherySPIFlash
-    with HasPeripherySPI
     with HasPeripheryGPIO
     with HasPeripherySeg7LED {
   override lazy val module = new TinyLanceSystemModuleImp(this)
@@ -35,9 +32,7 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
 class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
   extends RocketSubsystemModuleImp(_outer)
     with HasPeripheryUARTModuleImp
-    with HasPeripherySPIModuleImp
     with HasPeripheryGPIOModuleImp
-    with HasPeripherySPIFlashModuleImp
     with HasPeripheryMockAONModuleImp
     with HasPeripherySeg7LEDModuleImp {
   // Reset vector is set to the location of the mask rom

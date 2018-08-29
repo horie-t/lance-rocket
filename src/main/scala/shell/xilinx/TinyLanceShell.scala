@@ -10,7 +10,6 @@ import freechips.rocketchip.config._
 
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.pwm._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.pinctrl.{BasePin}
 
@@ -150,32 +149,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   reset_intcon_n                   := ip_reset_sys.io.interconnect_aresetn
   reset_periph_n                   := ip_reset_sys.io.peripheral_aresetn
 
-  //-----------------------------------------------------------------------
-  // SPI Flash
-  //-----------------------------------------------------------------------
-
-  def connectSPIFlash(dut: HasPeripherySPIFlashModuleImp): Unit = {
-    val qspiParams = p(PeripherySPIFlashKey)
-    if (!qspiParams.isEmpty) {
-      val qspi_params = qspiParams(0)
-      val qspi_pins = Wire(new SPIPins(() => {new BasePin()}, qspi_params))
-
-      SPIPinsFromPort(qspi_pins,
-        dut.qspi(0),
-        dut.clock,
-        dut.reset,
-        syncStages = qspi_params.sampleDelay
-      )
-
-      IOBUF(qspi_sck, dut.qspi(0).sck)
-      IOBUF(qspi_cs,  dut.qspi(0).cs(0))
-
-      (qspi_dq zip qspi_pins.dq).foreach {
-        case(a, b) => IOBUF(a,b)
-      }
-    }
-  }
-
   //---------------------------------------------------------------------
   // UART
   //---------------------------------------------------------------------
@@ -187,5 +160,4 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
       dut.uart(0).rxd := IOBUF(uart_txd_in)
     }
   }
-
 }
