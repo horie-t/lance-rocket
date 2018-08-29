@@ -23,7 +23,6 @@ import sifive.blocks.devices.seg7._
 
 class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
     with HasPeripheryMaskROMSlave
-    with HasPeripheryDebug
     with HasPeripheryMockAON
     with HasPeripheryUART
     with HasPeripherySPIFlash
@@ -35,7 +34,6 @@ class TinyLanceSystem(implicit p: Parameters) extends RocketSubsystem
 
 class TinyLanceSystemModuleImp[+L <: TinyLanceSystem](_outer: L)
   extends RocketSubsystemModuleImp(_outer)
-    with HasPeripheryDebugModuleImp
     with HasPeripheryUARTModuleImp
     with HasPeripherySPIModuleImp
     with HasPeripheryGPIOModuleImp

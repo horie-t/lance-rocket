@@ -52,31 +52,6 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     IOBUF(qspi_dq(2), dut.io.pins.qspi.dq(2))
     IOBUF(qspi_dq(3), dut.io.pins.qspi.dq(3))
 
-    //---------------------------------------------------------------------
-    // JTAG IOBUFs
-    //---------------------------------------------------------------------
-
-    dut.io.pins.jtag.TCK.i.ival := IBUFG(IOBUF(jd_2).asClock).asUInt
-
-    IOBUF(jd_5, dut.io.pins.jtag.TMS)
-    PULLUP(jd_5)
-
-    IOBUF(jd_4, dut.io.pins.jtag.TDI)
-    PULLUP(jd_4)
-
-    IOBUF(jd_0, dut.io.pins.jtag.TDO)
-
-    // mimic putting a pullup on this line (part of reset vote)
-    SRST_n := IOBUF(jd_6)
-    PULLUP(jd_6)
-
-    // jtag reset
-    val jtag_power_on_reset = PowerOnResetFPGAOnly(clock_32MHz)
-    dut.io.jtag_reset := jtag_power_on_reset
-
-    // debug reset
-    dut_ndreset := dut.io.ndreset
-
     // UART
     IOBUF(uart_txd_in, dut.io.pins.gpio.pins(16))
     IOBUF(uart_rxd_out, dut.io.pins.gpio.pins(17))
@@ -100,7 +75,7 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
 
     // Use the LEDs for some more useful debugging things
     IOBUF(led_0, ck_rst)
-    IOBUF(led_1, SRST_n)
+//    IOBUF(led_1, SRST_n)
     IOBUF(led_2, dut.io.pins.aon.pmu.dwakeup_n.i.ival)
     IOBUF(led_3, dut.io.pins.gpio.pins(14))
 

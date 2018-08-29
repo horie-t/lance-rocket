@@ -14,7 +14,6 @@ import freechips.rocketchip.system._
 
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.jtag._
 import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
@@ -37,14 +36,11 @@ object PinGen {
 
 class TinyLancePlatformIO(implicit val p: Parameters) extends Bundle {
   val pins = new Bundle {
-    val jtag = new JTAGPins(() => PinGen(), false)
     val gpio = new GPIOPins(() => PinGen(), p(PeripheryGPIOKey)(0))
     val qspi = new SPIPins(() => PinGen(), p(PeripherySPIFlashKey)(0))
     val seg7 = new Seg7LEDPins(() => PinGen())
     val aon  = new MockAONWrapperPins()
   }
-  val jtag_reset = Bool(INPUT)
-  val ndreset    = Bool(OUTPUT)
 }
 
 //-------------------------------------------------------------------------
@@ -133,14 +129,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
 
   // Dedicated Seg 7 LED Pads
   Seg7LEDPinsFromPort(io.pins.seg7, sys.seg7Led(0), clock = sys.clock, reset = sys.reset, syncStages = 0)
-
-  // JTAG Debug Interface
-  val sjtag = sys.debug.systemjtag.get
-  JTAGPinsFromPort(io.pins.jtag, sjtag.jtag)
-  sjtag.reset := io.jtag_reset
-  sjtag.mfr_id := p(JtagDTMKey).idcodeManufId.U(11.W)
-
-  io.ndreset := sys.debug.ndreset
 
   // AON Pads -- direct connection is OK because
   // EnhancedPin is hard-coded in MockAONPads
