@@ -69,15 +69,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val seg7_an_6      = IO(Analog(1.W))
   val seg7_an_7      = IO(Analog(1.W))
 
-  // RGB LEDs, 3 pins each
-  val led0_r       = IO(Analog(1.W))
-  val led0_g       = IO(Analog(1.W))
-  val led0_b       = IO(Analog(1.W))
-
-  val led1_r       = IO(Analog(1.W))
-  val led1_g       = IO(Analog(1.W))
-  val led1_b       = IO(Analog(1.W))
-
   // Sliding switches
   val sw_0         = IO(Analog(1.W))
   val sw_1         = IO(Analog(1.W))

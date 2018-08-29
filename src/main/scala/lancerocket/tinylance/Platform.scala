@@ -15,7 +15,6 @@ import freechips.rocketchip.system._
 import sifive.blocks.devices.mockaon._
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.jtag._
-import sifive.blocks.devices.pwm._
 import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.seg7._
@@ -75,15 +74,12 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   // converters.
 
   val sys_uart = sys.uart
-  val sys_pwm  = sys.pwm
   val sys_spi  = sys.spi
 
   val uart_pins = sys.outer.uartParams.map { c => Wire(new UARTPins(() => PinGen()))}
-  val pwm_pins  = sys.outer.pwmParams.map  { c => Wire(new PWMPins(() => PinGen(), c))}
   val spi_pins  = sys.outer.spiParams.map  { c => Wire(new SPIPins(() => PinGen(), c))}
 
   (uart_pins zip  sys_uart) map {case (p, r) => UARTPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
-  (pwm_pins  zip  sys_pwm)  map {case (p, r) => PWMPinsFromPort(p, r) }
   (spi_pins  zip  sys_spi)  map {case (p, r) => SPIPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
 
   //-----------------------------------------------------------------------
@@ -128,22 +124,6 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   // UART1
   BasePinToIOF(uart_pins(1).rxd, iof_0(24))
   BasePinToIOF(uart_pins(1).txd, iof_0(25))
-
-  //PWM
-  BasePinToIOF(pwm_pins(0).pwm(0), iof_1(0) )
-  BasePinToIOF(pwm_pins(0).pwm(1), iof_1(1) )
-  BasePinToIOF(pwm_pins(0).pwm(2), iof_1(2) )
-  BasePinToIOF(pwm_pins(0).pwm(3), iof_1(3) )
-
-  BasePinToIOF(pwm_pins(1).pwm(1), iof_1(19))
-  BasePinToIOF(pwm_pins(1).pwm(0), iof_1(20))
-  BasePinToIOF(pwm_pins(1).pwm(2), iof_1(21))
-  BasePinToIOF(pwm_pins(1).pwm(3), iof_1(22))
-
-  BasePinToIOF(pwm_pins(2).pwm(0), iof_1(10))
-  BasePinToIOF(pwm_pins(2).pwm(1), iof_1(11))
-  BasePinToIOF(pwm_pins(2).pwm(2), iof_1(12))
-  BasePinToIOF(pwm_pins(2).pwm(3), iof_1(13))
 
   //-----------------------------------------------------------------------
   // Drive actual Pads
