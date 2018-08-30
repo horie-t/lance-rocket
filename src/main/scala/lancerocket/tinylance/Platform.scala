@@ -63,14 +63,12 @@ class TinyLancePlatform(implicit val p: Parameters) extends Module {
   //-----------------------------------------------------------------------
   // Build GPIO Pin Mux
   //-----------------------------------------------------------------------
-  // Pin Mux for UART, SPI, PWM
+  // Pin Mux for UART
   // First convert the System outputs into "IOF" using the respective *GPIOPort
   // converters.
 
   val sys_uart = sys.uart
-
   val uart_pins = sys.outer.uartParams.map { c => Wire(new UARTPins(() => PinGen()))}
-
   (uart_pins zip  sys_uart) map {case (p, r) => UARTPinsFromPort(p, r, clock = clock, reset = reset, syncStages = 0)}
 
   //-----------------------------------------------------------------------

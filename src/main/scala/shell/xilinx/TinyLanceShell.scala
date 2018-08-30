@@ -96,14 +96,7 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val reset_periph   = Wire(Bool())
   val reset_intcon_n = Wire(Bool())
   val reset_periph_n = Wire(Bool())
-
-  val dut_jtag_TCK   = Wire(Clock())
-  val dut_jtag_TMS   = Wire(Bool())
-  val dut_jtag_TDI   = Wire(Bool())
-  val dut_jtag_TDO   = Wire(Bool())
-  val dut_jtag_reset = Wire(Bool())
-  val dut_ndreset    = Wire(Bool())
-
+  
   //-----------------------------------------------------------------------
   // Clock Generator
   //-----------------------------------------------------------------------
@@ -132,7 +125,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   ip_reset_sys.io.slowest_sync_clk := clock_8MHz
   ip_reset_sys.io.ext_reset_in     := ck_rst
   ip_reset_sys.io.aux_reset_in     := true.B
-  ip_reset_sys.io.mb_debug_sys_rst := dut_ndreset
   ip_reset_sys.io.dcm_locked       := mmcm_locked
 
   reset_core                       := ip_reset_sys.io.mb_reset
@@ -140,16 +132,4 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   reset_periph                     := ip_reset_sys.io.peripheral_reset
   reset_intcon_n                   := ip_reset_sys.io.interconnect_aresetn
   reset_periph_n                   := ip_reset_sys.io.peripheral_aresetn
-
-  //---------------------------------------------------------------------
-  // UART
-  //---------------------------------------------------------------------
-
-  def connectUART(dut: HasPeripheryUARTModuleImp): Unit = {
-    val uartParams = p(PeripheryUARTKey)
-    if (!uartParams.isEmpty) {
-      IOBUF(uart_rxd_out, dut.uart(0).txd)
-      dut.uart(0).rxd := IOBUF(uart_txd_in)
-    }
-  }
 }
