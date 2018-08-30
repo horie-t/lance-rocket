@@ -12,21 +12,21 @@ $(dtb): $(BUILD_DIR)/$(CONFIG_PROJECT).$(CONFIG).dts
 .PHONY: dtb
 dtb: $(dtb)
 
-elf := $(BUILD_DIR)/xip.elf
-$(elf): xip.S $(dtb)
-	$(CC) $(CFLAGS) -DXIP_TARGET_ADDR=0x20400000 -DDEVICE_TREE='"$(dtb)"' $(LFLAGS) -o $@ $<
+elf := $(BUILD_DIR)/bare.elf
+$(elf): bare.S $(dtb)
+	$(CC) $(CFLAGS) -DDEVICE_TREE='"$(dtb)"' $(LFLAGS) -o $@ $<
 
 .PHONY: elf
 elf: $(elf)
 
-bin := $(BUILD_DIR)/xip.bin
+bin := $(BUILD_DIR)/bare.bin
 $(bin): $(elf)
 	$(OBJCOPY) -O binary $< $@
 
 .PHONY: bin
 bin: $(bin)
 
-hex := $(BUILD_DIR)/xip.hex
+hex := $(BUILD_DIR)/bare.hex
 $(hex): $(bin)
 	od -t x4 -An -w4 -v $< > $@
 
