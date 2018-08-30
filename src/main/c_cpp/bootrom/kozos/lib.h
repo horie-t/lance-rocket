@@ -6,13 +6,13 @@
  *
  * @param c 送信する文字コード
  */
-int putc(unsigned char c);	
+int putc(char c);
 
 /**
  * @brief 文字列送信
  *
  * @param str 送信する文字列
  */
-int puts(unsigned char *str);
+int puts(const char *str);
 
 #endif

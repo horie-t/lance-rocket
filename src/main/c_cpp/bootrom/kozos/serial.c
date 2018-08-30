@@ -43,7 +43,7 @@ struct tinylance_uart {
 #define UART_BAUT_RATE 115200
 
 static struct {
-  volatile tinylance_uart *uart;
+  volatile struct tinylance_uart *uart;
 } regs[SERIAL_DEV_NUM] = {
   {TinyLance_UART_0},
 };
@@ -53,8 +53,8 @@ int serial_init(int index)
   volatile struct tinylance_uart *uart = regs[index].uart;
 
   if (index == 0) {
-    *(GPIO_CTRL_ADDR + GPIO_IOF_SEL) &= ~IOF0_UART0_MASK;
-    *(GPIO_CTRL_ADDR + GPIO_IOF_EN) |= IOF0_UART0_MASK;
+    *(int32_t *)(GPIO_CTRL_ADDR + GPIO_IOF_SEL) &= ~IOF0_UART0_MASK;
+    *(int32_t *)(GPIO_CTRL_ADDR + GPIO_IOF_EN) |= IOF0_UART0_MASK;
   } else {
     // 不正なindex
     return 1;
@@ -69,7 +69,7 @@ int serial_init(int index)
 int serial_is_send_enable(int index)
 {
   volatile struct tinylance_uart *uart = regs[index].uart;
-  return !(uart.txdata & UART_TXFULL);
+  return !(uart->txdata & UART_TXFULL);
 }
 
 int serial_send_byte(int index, unsigned char b)
