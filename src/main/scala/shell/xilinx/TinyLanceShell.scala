@@ -79,11 +79,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   val btn_2        = IO(Analog(1.W))
   val btn_3        = IO(Analog(1.W))
 
-  // Dedicated QSPI interface
-  val qspi_cs      = IO(Analog(1.W))
-  val qspi_sck     = IO(Analog(1.W))
-  val qspi_dq      = IO(Vec(4, Analog(1.W)))
-
   // UART0
   val uart_rxd_out = IO(Analog(1.W))
   val uart_txd_in  = IO(Analog(1.W))
