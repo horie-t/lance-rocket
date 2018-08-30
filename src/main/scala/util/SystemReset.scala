@@ -3,7 +3,8 @@
 package sifive.blocks.util
 
 import chisel3._
-import chisel3.core._
+import chisel3.core.withClock
+import chisel3.util._
 
 class SystemReset(clockNum: Int) extends Module {
   val io = new Bundle {
@@ -12,26 +13,25 @@ class SystemReset(clockNum: Int) extends Module {
     val resets = Output(Vec(clockNum, Clock()))
   }
 
-  withClock {
+  withClock (io.clocks(0)) {
     val holdClock = Module(new ResetHold)
-    holdClock.io.aReset := aReset
-    holdClock.io.clock := clocks(0)
-    resets(0) := holdClock.io.reset
+    holdClock.io.aReset := io.aReset
+    io.resets(0) := holdClock.io.reset
   }
 
   val synchronizers = Seq.fill(clockNum - 1){Module(new ResetSync)}
   for (i <- 0 until clockNum - 1) {
     val synchronizer =  synchronizers(i)
-    synchronizer.io.aReset := resets(i)
-    synchronizer.io.clock := clocks(i + 1)
-    resets(i + 1) := synchronizer.io.reset
+    synchronizer.io.aReset := io.resets(i)
+    synchronizer.io.clock := io.clocks(i + 1)
+    io.resets(i + 1) := synchronizer.io.reset
   }
 }
 
 /** クロックがロックされ、電源が安定するまで、リセット維持します。
   * 
   */
-class ResetSync(clocksForSync: Int = 4) extends BlackBox {
+class ResetSync(clocksForSync: Int = 4) extends BlackBox with HasBlackBoxInline {
   val io = new Bundle {
     val aReset = Input(Bool())
     val clock = Input(Clock())
@@ -64,26 +64,28 @@ class ResetSync(clocksForSync: Int = 4) extends BlackBox {
   */
 class ResetHold(clocksForSync: Int = 4, debounceBits: Int = 8) extends Module {
   val io = new Bundle {
-    aReset = Input(Bool())
-    reset = Output(Bool())
+    val aReset = Input(Bool())
+    val reset = Output(Bool())
   }
 
   val rawReset = Wire(Bool())
   val capture = Module(new ResetSync)
-  capture.io.aReset := aReset
+  capture.io.aReset := io.aReset
   capture.io.clock := clock
   rawReset := capture.io.reset
 
-  val syncReset = RegNext(Cat(rawReset, syncReset(clocksForSync - 1, 1)), ((1 << clocksForSync) - 1).asUInt)
+  val syncReset = RegInit(((1 << clocksForSync) - 1).asUInt)
+  syncReset := Cat(rawReset, syncReset(clocksForSync - 1, 1))
+
   val debounceReset = RegInit(((1 << debounceBits + 1) - 1).asUInt)
 
   val outReset = debounceReset(debounceBits)
 
   when (syncReset(0) === 1.U) {
     debounceReset := ((1 << debounceBits + 1) - 1).asUInt
-  } .elsewise {
+  } .otherwise {
     debounceReset := debounceReset - outReset
   }
 
-  reset := outReset
+  io.reset := outReset
 }
