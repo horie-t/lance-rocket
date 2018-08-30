@@ -13,7 +13,8 @@ import sifive.blocks.devices.pwm._
 import sifive.blocks.devices.uart._
 import sifive.blocks.devices.pinctrl.{BasePin}
 
-import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, mmcm4, reset_sys, PowerOnResetFPGAOnly}
+import sifive.fpgashells.clocks._
+import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, Series7MMCM, reset_sys, PowerOnResetFPGAOnly}
 
 //-------------------------------------------------------------------------
 // TinyLanceShell
@@ -88,13 +89,6 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   //-----------------------------------------------------------------------
   // Wire declrations
   //-----------------------------------------------------------------------
-
-  // Note: these frequencies are approximate.
-  val clock_8MHz     = Wire(Clock())
-  val clock_32MHz    = Wire(Clock())
-  val clock_65MHz    = Wire(Clock())
-  val clock_25MHz    = Wire(Clock())
-
   val mmcm_locked    = Wire(Bool())
 
   val reset_core     = Wire(Bool())
@@ -115,15 +109,18 @@ abstract class TinyLanceShell(implicit val p: Parameters) extends RawModule {
   //-----------------------------------------------------------------------
   // Mixed-mode clock generator
 
-  val ip_mmcm = Module(new mmcm4())
+  val ip_mmcm = Module(new Series7MMCM(PLLParameters(
+    "ip_mmcm",
+    InClockParameters(100, 50),
+    Seq(
+      OutClockParameters(8.388),   // 8.388 MHz = 32.768 kHz * 256
+      OutClockParameters(65),      // 65 MHz
+      OutClockParameters(32.5))))) // 65/2 MHz
 
-  ip_mmcm.io.clk_in1 := CLK100MHZ
-  clock_8MHz         := ip_mmcm.io.clk_out1  // 8.388 MHz = 32.768 kHz * 256
-  clock_65MHz        := ip_mmcm.io.clk_out2  // 65 Mhz
-  clock_32MHz        := ip_mmcm.io.clk_out3  // 65/2 Mhz
-  clock_25MHz        := ip_mmcm.io.clk_out4  // 25MHz (VGA Px Clock)
-  ip_mmcm.io.resetn  := ck_rst
-  mmcm_locked        := ip_mmcm.io.locked
+  ip_mmcm.io.clk_in1 := CLK100MHZ.asUInt
+  ip_mmcm.io.reset := ~ck_rst
+  mmcm_locked := ip_mmcm.io.locked
+  val Seq(clock_8MHz, clock_65MHz, clock_32MHz) = ip_mmcm.getClocks
 
   //-----------------------------------------------------------------------
   // System Reset
