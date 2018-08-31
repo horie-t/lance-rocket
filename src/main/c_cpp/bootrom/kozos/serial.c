@@ -12,7 +12,7 @@
 
 struct tinylance_uart {
   volatile uint32_t txdata;	/* 送信データレジスタ(31: full FIFO満杯, 7-0: data)*/
-  volatile uint32_t rxdate;	/* 受信データレジスタ(32: empty FIFO空, 7-0: data) */
+  volatile uint32_t rxdata;	/* 受信データレジスタ(32: empty FIFO空, 7-0: data) */
   volatile uint32_t txctrl;	/* 送信制御レジスタ (18-16: txcnt TxFIFO watermark割り込みトリガしきい値, 
 				   1: nstop ストップビット数(0が1つ、1が2つ), 0: txen アクティブ状態)*/
   volatile uint32_t rxctrl;	/* 受信制御レジスタ (18:16: rxcnt RxFIFO watermark割り込みトリガしきい値 
@@ -82,4 +82,24 @@ int serial_send_byte(int index, unsigned char b)
   uart->txdata = b;
 
   return 0;
+}
+
+int serial_is_recv_enable(int index)
+{
+  volatile struct tinylance_uart *uart = regs[index].uart;
+
+  return !(uart->rxdata & UART_RXEMPTY);
+}
+
+unsigned char serial_recv_byte(int index)
+{
+  volatile struct tinylance_uart *uart = regs[index].uart;
+  unsigned char c;
+
+  while (!serial_is_recv_enable(index))
+    ;
+
+  c = uart->rxdata;
+
+  return c;
 }

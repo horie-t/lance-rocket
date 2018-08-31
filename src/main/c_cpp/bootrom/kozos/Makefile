@@ -6,7 +6,7 @@ CFLAGS=-march=rv32imac -mabi=ilp32 -O2 -std=gnu11 -Wall -I. -nostartfiles -fno-c
 LFLAGS=-static -nostdlib -T ld.scr
 
 elf := $(BUILD_DIR)/bare.elf
-$(elf): startup.s main.c serial.c lib.c
+$(elf): startup.s main.c serial.c lib.c xmodem.c
 	$(CC) $(CFLAGS) $(LFLAGS) -o $@ $^
 
 .PHONY: elf

@@ -7,7 +7,8 @@ MEMORY
 	rom(rx)		: o = 0x00010000, l = 0x2000
 
 	ramall(rwx)	: o = 0x80000000, l = 0x4000 /* 16KB */
-	data(rwx)	: o = 0x80000000, l = 0x4000
+	buffer(rwx)	: o = 0x80002000, l = 0x1d00 /* 8KB */
+	data(rwx)	: o = 0x80003d00, l = 0x0300
 	stack(rw)	: o = 0x80004000, l = 0x0000 /* end of RAM */
 }
 
@@ -29,6 +30,10 @@ SECTIONS
 		*(.rodata.*)
 		erodata = .;
 	} > rom
+
+	.buffer : {
+		buffer_start = .;
+	} > buffer
 
 	.data : {
 	      	data_start = .;

@@ -17,11 +17,23 @@ int strncmp(const char *s1, const char *s2, int len);
 int putc(char c);
 
 /**
+ * @brief 1文字受信
+ */
+unsigned char getc(void);
+
+/**
  * @brief 文字列送信
  *
  * @param str 送信する文字列
  */
 int puts(const char *str);
+
+/**
+ * @brief 文字受信
+ *
+ * @param buf 受信データ用バッファ
+ */
+int gets(unsigned char *buf);
 
 /**
  * @brief 数値の16進数表記

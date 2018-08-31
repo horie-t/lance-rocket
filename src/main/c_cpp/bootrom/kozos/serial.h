@@ -20,4 +20,14 @@ int serial_is_send_enable(int index);
  */
 int serial_send_byte(int index, unsigned char b);
 
+/**
+ * @brief 受信可能かどうかを返します。
+ */
+int serial_is_recv_enable(int index);
+
+/**
+ * @brief 1文字受信
+ */
+unsigned char serial_recv_byte(int index);
+
 #endif
