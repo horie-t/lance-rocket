@@ -1,27 +1,65 @@
 OUTPUT_ARCH("riscv")
 ENTRY(_start)
 
+MEMORY
+{
+	romall(rx)	: o = 0x00010000, l = 0x2000 /* 8KB */
+	rom(rx)		: o = 0x00010000, l = 0x2000
+
+	ramall(rwx)	: o = 0x80000000, l = 0x4000 /* 16KB */
+	data(rwx)	: o = 0x80000000, l = 0x4000
+	stack(rw)	: o = 0x80004000, l = 0x0000 /* end of RAM */
+}
+
 SECTIONS
 {
 	. = 0x10000;		/* ROMの先頭番地 */
 
 	.text : {
+	      	text_start = .;
 	      	*(.text.init)
 	      	*(.text)
-	}
+		etext = .;
+	} > rom
 
 	.rodata : {
+		rodata_start = .;
 		*(.strings)
 		*(.rodata)
 		*(.rodata.*)
-	}
+		erodata = .;
+	} > rom
 
 	.data : {
+	      	data_start = .;
 	      	*(.data)
-	}
+		edata = .;
+	} > data AT> rom
+
+	.sdata : {
+	      	sdata_start = .;
+	      	*(.sdata)
+		esdata = .;
+	} > data AT> rom
 
 	.bss : {
+	       bss_start = .;
 	       *(.bss)
 	       *(COMMON)
-	}
+	       ebss = .;
+	} > data AT> rom
+	
+	.sbss : {
+	       sbss_start = .;
+	       *(.sbss)
+	       *(COMMON)
+	       esbss = .;
+	} > data AT> rom
+
+	. = ALIGN(4);
+	_end = .;
+
+	.stack : {
+	       stack = .;
+	} > stack
 }

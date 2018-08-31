@@ -2,10 +2,9 @@
 	
 	.section .text.init
 	.option norvc
-	.globl _start
+	.global _start
 _start:
-	li sp, 0x80004000
+	la sp, stack
 	call main
 1:
 	j 1b 	# 無限ループ
-
