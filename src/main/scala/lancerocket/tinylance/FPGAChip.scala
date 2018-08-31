@@ -45,6 +45,7 @@ class TinyLanceChip(implicit override val p: Parameters) extends TinyLanceShell 
     val iobuf_uart_cts = Module(new IOBUF())
     iobuf_uart_cts.io.I := false.B
     iobuf_uart_cts.io.T := false.B
+    attach(uart_cts, iobuf_uart_cts.io.IO)
 
     // Only 19 out of 20 shield pins connected to GPIO pins
     // Shield pin A5 (pin 14) left unconnected
