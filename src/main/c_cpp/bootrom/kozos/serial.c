@@ -48,6 +48,8 @@ static struct {
   {TinyLance_UART_0},
 };
 
+static int32_t received_val = -1;
+
 int serial_init(int index)
 {
   volatile struct tinylance_uart *uart = regs[index].uart;
@@ -60,9 +62,10 @@ int serial_init(int index)
     return 1;
   }
 
-  uart->txctrl |= UART_TXEN;
   uart->div = CPU_CLOCK / UART_BAUT_RATE - 1;
-
+  uart->txctrl |= UART_TXEN;
+  uart->rxctrl |= UART_RXEN;
+  
   return 0;
 }
 
@@ -86,20 +89,33 @@ int serial_send_byte(int index, unsigned char b)
 
 int serial_is_recv_enable(int index)
 {
+  int32_t val;
   volatile struct tinylance_uart *uart = regs[index].uart;
 
-  return !(uart->rxdata & UART_RXEMPTY);
+  if (received_val > 0) {
+    return 1;
+  }
+
+  val = (int32_t)uart->rxdata;
+  if (val >= 0) {
+    received_val = val;
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 unsigned char serial_recv_byte(int index)
 {
   volatile struct tinylance_uart *uart = regs[index].uart;
+  int32_t val;
   unsigned char c;
 
   while (!serial_is_recv_enable(index))
     ;
 
-  c = uart->rxdata;
-
+  c = received_val & 0xFF;
+  received_val = -1;
+  
   return c;
 }
