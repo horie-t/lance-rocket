@@ -22,7 +22,7 @@ static int xmodem_wait(void)
 
   /* 受信開始するまでNAKを定期的に送信する */
   while (!serial_is_recv_enable(SERIAL_DEFAULT_DEVICE)) {
-    if (++cnt >= 200000) {
+    if (++cnt >= 8000000) {
       cnt = 0;
       serial_send_byte(SERIAL_DEFAULT_DEVICE, XMODEM_NAK);
     }
@@ -77,7 +77,7 @@ long xmodem_recv(char *buf)
 
     c = serial_recv_byte(SERIAL_DEFAULT_DEVICE);
 
-    if (c == XMODEM_EOF) {
+    if (c == XMODEM_EOT) {
       /* 受信終了 */
       serial_send_byte(SERIAL_DEFAULT_DEVICE, XMODEM_ACK);
       break;

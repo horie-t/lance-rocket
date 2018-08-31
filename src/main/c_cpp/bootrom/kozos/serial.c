@@ -40,7 +40,7 @@ struct tinylance_uart {
 #define UART_IP_TXWM            0x1
 #define UART_IP_RXWM            0x2
 
-#define UART_BAUT_RATE 115200
+#define UART_BAUT_RATE 9600
 
 static struct {
   volatile struct tinylance_uart *uart;
