@@ -2,8 +2,11 @@
 #define _ELF_H_INCLUDED_
 
 /**
- * ELF形式の解析
+ * @brief ELF形式の管理情報のチェックと開始アドレスの取得
+ *
+ * @param ELFバイナリイメージ
+ * @return 読み込めたときは、開始アドレスを返します。
  */
-int elf_load(char *);
+char *elf_load(char *buf);
 
 #endif
