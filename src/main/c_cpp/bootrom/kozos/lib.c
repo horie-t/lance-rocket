@@ -134,7 +134,7 @@ int putxval(unsigned long value, int column)
   p = buf + sizeof(buf) - 1;
   *(p--) = '\0';
 
-  if (!value || !column)
+  if (!value && !column)
     column++;
 
   while (value || column) {
