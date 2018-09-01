@@ -107,8 +107,6 @@ int serial_is_recv_enable(int index)
 
 unsigned char serial_recv_byte(int index)
 {
-  volatile struct tinylance_uart *uart = regs[index].uart;
-  int32_t val;
   unsigned char c;
 
   while (!serial_is_recv_enable(index))

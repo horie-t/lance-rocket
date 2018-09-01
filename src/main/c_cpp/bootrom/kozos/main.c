@@ -7,7 +7,8 @@
 static int init(void)
 {
   /* 以下はリンカ・スクリプトで定義してあるシンボル */
-  extern int erodata, data_start, edata, sdata_start, esdata, bss_start, ebss, ebss_start, esbss;
+  //  extern int erodata, data_start, edata, sdata_start, esdata, bss_start, ebss, ebss_start, esbss;
+  extern int erodata, data_start, /*edata, sdata_start,*/ esdata, bss_start, /*ebss, ebss_start,*/ esbss;
 
   /*
    * データ領域とBSS領域を初期化する。この処理以降でないと,
@@ -71,7 +72,7 @@ int main(void)
 
   while (1) {
     puts("kzload> ");		/* プロンプト表示 */
-    gets(buf);			/* シリアルからのコマンド受信 */
+    gets((unsigned char *)buf);			/* シリアルからのコマンド受信 */
 
     if (!strcmp(buf, "load")) {
       /* XMODEMでのファイルのダウンロード */
