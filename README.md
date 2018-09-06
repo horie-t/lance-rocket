@@ -15,4 +15,7 @@ IoT(Internet of Things)といった用途向けです。1.の周辺機器に加�
 4. ハイ・パフォーマンス・コンピュータ用(ThunderLance)  
 3.のマルチコア版です。(できれば、複数のボードを繋いで、NUMAアーキテクチャを実装したいが…)
 
+現在のところ、「1. RISC-Vの学習用(TinyLance)」は完成し、『[12ステップで作る組込みOS自作入門](https://www.amazon.co.jp/dp/4877832394)』の8th ステップまでは移植できています。
+
+ビルド方法などは、[こちら](https://github.com/horie-t/freedom)を参照してください。
 
